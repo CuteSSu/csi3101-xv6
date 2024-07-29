@@ -202,6 +202,8 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+  np->ticks = 0;
+  np->priority = curproc->priority; //When a fork() occurs, the child process inherits the nice value of the parent process
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
