@@ -563,3 +563,25 @@ ps()
  return 0;
 }
 
+int
+nice(int value)
+{
+  struct proc *curproc = myproc(); //a current process
+  acquire(&ptable.lock);
+  cprintf("pid: %d, before nice: %d \n", curproc->pid, curproc->priority);
+  curproc->priority += value;  //add value to the nice value of a current process 
+
+  // The range of the nice value is -5 (highest priority) to 4 (lowest priority)
+  // Attempts to set a nice value outside the range are clamped to the range
+  if (curproc->priority > 4) {
+     curproc->priority = 4;
+  } else if (curproc->priority < -5) {
+     curproc->priority = -5;
+  }
+
+  release(&ptable.lock);
+  cprintf("pid: %d, after priority: %d\n",curproc-> pid, curproc->priority);
+
+  return curproc->priority; //return the nice value of the current process
+}
+
