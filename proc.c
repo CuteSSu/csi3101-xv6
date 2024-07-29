@@ -537,3 +537,29 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int
+ps()
+{
+ struct proc *p;
+ sti();
+ acquire(&ptable.lock);
+ cprintf("name \t pid \t ppid \t state \t nice \t ticks \t");
+ cprintf("ticks: %d \n", ticks);
+ for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+  // cprintf("%s \t %d \t %d \t %s \t %d \t %d \n", p->name, p->pid, p->parent ? p->parent->pid : -1, p->state, p->priority, p->ticks);
+ 
+   //int ppid = (p->parent != 0) ? p->parent->pid : -1;
+   if(p->state == SLEEPING)
+     cprintf("%s \t %d \t %d \t %d \t %d \t %d sleeping \n", p->name, p->pid, p->parent ? p->parent->pid : -1, p->state, p->priority, p->ticks);
+   else if(p->state == RUNNING)
+     cprintf("%s \t %d \t %d \t %d \t %d \t %d running \n", p->name, p->pid, p->parent ? p->parent->pid : -1, p->state, p->priority, p->ticks);
+   else if(p->state == RUNNABLE)
+     cprintf("%s \t %d \t %d \t %d \t %d \t %d runnable \n", p->name, p->pid, p->parent ? p->parent->pid : -1, p->state, p->priority, p->ticks);
+   else if(p->state == ZOMBIE)
+     cprintf("%s \t %d \t %d \t %d \t %d \t %d zombie \n", p->name, p->pid, p->parent ? p->parent->pid : -1,p->state, p->priority, p->ticks);
+ }
+ release(&ptable.lock);
+ return 0;
+}
+
