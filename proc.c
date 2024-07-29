@@ -139,6 +139,7 @@ userinit(void)
   p->tf->eflags = FL_IF;
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
+  p->priority = 2;  // The initial process has the nice value of 2
 
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
